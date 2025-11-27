@@ -41,7 +41,7 @@ GLOBAL OPTIONS:
 ```sh
 # For example, the host is a linux kernel based system with amd64 architecture
 # Download the app
-curl -Lo /usr/local/bin/xsh https://github.com/gek64/xsh/releases/latest/download/xsh-linux-amd64
+curl -Lo /usr/local/bin/xsh https://github.com/unix755/xsh/releases/latest/download/xsh-linux-amd64
 # Give the app execute permission
 chmod +x /usr/local/bin/xsh
 # Show help
@@ -52,7 +52,7 @@ chmod +x /usr/local/bin/xsh
 
 ```sh
 # Download application source code
-git clone https://github.com/gek64/xsh.git
+git clone https://github.com/unix755/xsh.git
 # Compile the source code
 cd xsh
 export CGO_ENABLED=0

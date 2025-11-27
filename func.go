@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/gek64/gek/gApp"
-	"github.com/gek64/gek/gApp/compression/unzip"
-	"github.com/gek64/gek/gDownloader"
 	"os"
 	"path/filepath"
 	"runtime"
+
+	"github.com/unix755/xtools/xApp"
+	"github.com/unix755/xtools/xApp/compression/unzip"
+	"github.com/unix755/xtools/xDownloader"
 )
 
 // 可执行文件操作
@@ -25,7 +26,7 @@ func downloadBinaryFile(localArchiveFile string, tagName string) (err error) {
 	if err != nil {
 		return err
 	}
-	return gDownloader.Download(downloadURL, filepath.Join(os.TempDir(), "xray.zip"), "")
+	return xDownloader.Download(downloadURL, filepath.Join(os.TempDir(), "xray.zip"), "")
 }
 func installBinaryFile() (err error) {
 	if runtime.GOOS != "windows" {
@@ -98,7 +99,7 @@ func installConfig(file string) (err error) {
 }
 
 // 服务操作
-func initService() (service *gApp.Service, err error) {
+func initService() (service *xApp.Service, err error) {
 	var serviceName string
 	// 获取初始化系统名称,及服务内容
 	initSystem, serviceContent, err := GetService()
@@ -113,7 +114,7 @@ func initService() (service *gApp.Service, err error) {
 		serviceName = "xray"
 	}
 	// 初始化服务
-	return gApp.NewService(initSystem, serviceName, serviceContent)
+	return xApp.NewService(initSystem, serviceName, serviceContent)
 }
 func installService() (err error) {
 	// 服务初始化
