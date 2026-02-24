@@ -8,6 +8,7 @@ import (
 
 	"github.com/unix755/xtools/xApp"
 	"github.com/unix755/xtools/xDownloader"
+	"github.com/unix755/xtools/xExec"
 )
 
 // 可执行文件操作
@@ -31,10 +32,11 @@ func downloadBinaryFile(localArchiveFile string, tagName string) (err error) {
 func installBinaryFile() (err error) {
 	if runtime.GOOS != "windows" {
 		// 解压可执行文件
-		err = exec.Command("unzip", filepath.Join(os.TempDir(), "xray.zip"), "-d", "/usr/local/bin", "xray").Run()
+		err = xExec.Run(exec.Command("unzip", "-o", filepath.Join(os.TempDir(), "xray.zip"), "-d", "/usr/local/bin", "xray"))
 		if err != nil {
 			return err
 		}
+
 		// 可执行文件赋权
 		err = os.Chmod("/usr/local/bin/xray", 0755)
 		if err != nil {
@@ -42,13 +44,14 @@ func installBinaryFile() (err error) {
 		}
 	} else {
 		// windows下解压文件名需要.exe后缀
-		err = exec.Command("unzip", filepath.Join(os.TempDir(), "xray.zip"), "-d", "/usr/local/bin", "xray.exe").Run()
+		err = xExec.Run(exec.Command("unzip", "-o", filepath.Join(os.TempDir(), "xray.zip"), "-d", "/usr/local/bin", "xray.exe"))
 		if err != nil {
 			return err
 		}
 	}
+
 	// 解压资源文件
-	return exec.Command("unzip", filepath.Join(os.TempDir(), "xray.zip"), "-d", "/usr/local/etc/xray", "geoip.dat", "geosite.dat").Run()
+	return xExec.Run(exec.Command("unzip", "-o", filepath.Join(os.TempDir(), "xray.zip"), "-d", "/usr/local/etc/xray", "geoip.dat", "geosite.dat"))
 }
 func uninstallBinaryFile() (err error) {
 	err = os.RemoveAll("/usr/local/etc/xray")
