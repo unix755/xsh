@@ -114,7 +114,7 @@ func GetService() (initSystem string, serviceContent []byte, err error) {
 		initSystem = "openrc"
 	}
 	// openwrt procd
-	_, err = exec.LookPath("opkg")
+	_, err = exec.LookPath("procd")
 	if err == nil {
 		serviceFile = "configs/xray.procd"
 		initSystem = "procd"
