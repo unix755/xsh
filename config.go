@@ -9,7 +9,7 @@ import (
 	"runtime"
 )
 
-//go:embed configs/*
+//go:embed service/*
 var container embed.FS
 
 func GetDownloadURL(tagName string) (downloadURL string, err error) {
@@ -109,10 +109,10 @@ func GetService() (initSystem string, serviceContent []byte, err error) {
 		switch string(b) {
 		case "systemd":
 			initSystem = "systemd"
-			serviceFile = "configs/xray.service"
+			serviceFile = "service/xray.service"
 		case "procd":
 			initSystem = "procd"
-			serviceFile = "configs/xray.procd"
+			serviceFile = "service/xray.procd"
 		}
 	}
 
@@ -120,13 +120,13 @@ func GetService() (initSystem string, serviceContent []byte, err error) {
 	_, err = exec.LookPath("openrc")
 	if err == nil {
 		initSystem = "openrc"
-		serviceFile = "configs/xray.openrc"
+		serviceFile = "service/xray.openrc"
 	}
 
 	// 通过查找系统变量
 	if runtime.GOOS == "freebsd" {
 		initSystem = "rc.d"
-		serviceFile = "configs/xray.rcd"
+		serviceFile = "service/xray.rcd"
 	}
 
 	// 找不到初始化系统返回错误
