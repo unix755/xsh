@@ -4,6 +4,7 @@ import (
 	"embed"
 	"errors"
 	"net/url"
+	"os"
 	"os/exec"
 	"runtime"
 )
@@ -101,30 +102,33 @@ func GetDownloadURL(tagName string) (downloadURL string, err error) {
 
 func GetService() (initSystem string, serviceContent []byte, err error) {
 	serviceFile := ""
-	// systemd
-	_, err = exec.LookPath("systemctl")
+
+	// 通过查找 /proc/1/comm 文件
+	b, err := os.ReadFile("/proc/1/comm")
 	if err == nil {
-		serviceFile = "configs/xray.service"
-		initSystem = "systemd"
+		switch string(b) {
+		case "systemd":
+			initSystem = "systemd"
+			serviceFile = "configs/xray.service"
+		case "procd":
+			initSystem = "procd"
+			serviceFile = "configs/xray.procd"
+		}
 	}
-	// alpine openrc
+
+	// 通过查找有特异性的二进制文件
 	_, err = exec.LookPath("openrc")
 	if err == nil {
-		serviceFile = "configs/xray.openrc"
 		initSystem = "openrc"
+		serviceFile = "configs/xray.openrc"
 	}
-	// openwrt procd
-	_, err = exec.LookPath("procd")
-	if err == nil {
-		serviceFile = "configs/xray.procd"
-		initSystem = "procd"
-	}
-	// freebsd rc.d
-	_, err = exec.LookPath("rcorder")
-	if err == nil {
-		serviceFile = "configs/xray.rcd"
+
+	// 通过查找系统变量
+	if runtime.GOOS == "freebsd" {
 		initSystem = "rc.d"
+		serviceFile = "configs/xray.rcd"
 	}
+
 	// 找不到初始化系统返回错误
 	if initSystem == "" {
 		return "", nil, errors.New("init system not found")
